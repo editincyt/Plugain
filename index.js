@@ -3,19 +3,19 @@ import { db } from './firebase.js';
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('uid');
 
-// Eğer kullanıcı ID'si URL'den alınamıyorsa
+// Eğer uid parametresi URL'den alınamazsa, kullanıcıya uyarı göster
 if (!userId) {
-  alert('Kullanıcı ID\'si (uid) URL\'de bulunamadı.');
-  window.location.reload();  // Sayfayı yeniden yükleyin
+  alert('Kullanıcı ID\'si (uid) URL\'de bulunamadı. Lütfen Telegram üzerinden tekrar giriş yapın.');
+  window.location.reload();  // Sayfayı yeniden yükle
 }
 
-// Firebase'den kullanıcı verilerini almak
+// Firebase'den kullanıcı verisini almak
 const userRef = db.ref('users/' + userId);
 userRef.once('value', (snapshot) => {
   if (snapshot.exists()) {
     const userData = snapshot.val();
 
-    // Firebase'ten alınan verileri sayfada göstermek
+    // Kullanıcı bilgilerini sayfada göstermek
     document.getElementById('user-name').textContent = userData.name || "Ad Bulunamadı";
     document.getElementById('click-count').textContent = userData.clickCount || 0;
     document.getElementById('user-points').textContent = userData.points || 0;
