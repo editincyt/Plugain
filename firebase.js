@@ -1,11 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
+import { getDatabase } from 'firebase-admin/database';
 
-const firebaseConfig = {
-  databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
-};
+initializeApp({
+  credential: applicationDefault(),
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+});
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+const db = getDatabase();
 
-export { database, ref, get, set, update };
+export { db };
