@@ -1,14 +1,16 @@
 {
   "name": "plugain",
   "version": "1.0.0",
+  "description": "Reklam izleyerek puan kazanma sistemi",
   "main": "index.js",
   "dependencies": {
-    "firebase": "^9.0.0",
-    "telegraf": "^4.0.0"
+    "firebase": "^9.6.1",
+    "firebase-admin": "^10.0.0",
+    "telegraf": "^4.7.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "live-server"
   },
   "author": "Your Name",
-  "license": "ISC"
+  "license": "MIT"
 }
