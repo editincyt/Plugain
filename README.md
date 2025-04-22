@@ -1,1 +1,1 @@
-Başını aldık
+Başardık annee
