@@ -6,14 +6,14 @@
   <style>
     body {
       font-family: sans-serif;
-      background: #f9f9f9;
+      background: #f5f5f5;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
     .panel {
-      background: #fff;
+      background: white;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -33,7 +33,7 @@
       border: none;
       border-radius: 8px;
       background-color: #0088cc;
-      color: #fff;
+      color: white;
       cursor: pointer;
     }
     button:disabled {
@@ -50,14 +50,19 @@
     <button id="reklamBtn" onclick="reklamIzle()">Reklam İzle ve Puan Kazan</button>
   </div>
 
-  <!-- Firebase ve App JS -->
   <script type="module">
     import { database, ref, get, set, update } from './firebase.js';
 
     const uid = new URLSearchParams(window.location.search).get("uid");
+
     if (!uid) {
-      alert("Kullanıcı ID'si (uid) URL'de bulunamadı.");
-      throw new Error("Kullanıcı ID'si eksik.");
+      document.body.innerHTML = `
+        <div style="text-align:center; font-family:sans-serif; padding:40px;">
+          <h2>Hata</h2>
+          <p>Kullanıcı ID'si (uid) URL'de bulunamadı.</p>
+          <p>Lütfen Telegram üzerinden tekrar giriş yap.</p>
+        </div>`;
+      throw new Error("UID parametresi eksik.");
     }
 
     const userRef = ref(database, "users/" + uid);
@@ -70,6 +75,7 @@
       if (!data) {
         await set(userRef, {
           name: "Bilinmeyen Kullanıcı",
+          username: "yok",
           points: 0,
           clickCount: 0,
           lastClick: null
@@ -78,7 +84,11 @@
         return;
       }
 
-      document.getElementById("username").innerText = data.name || "Anonim";
+      let userText = data.name || "Anonim";
+      if (data.username && data.username !== "yok") {
+        userText += ` (@${data.username})`;
+      }
+      document.getElementById("username").innerText = userText;
       document.getElementById("puan").innerText = data.points || 0;
       document.getElementById("tiklama").innerText = data.clickCount || 0;
 
