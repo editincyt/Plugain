@@ -1,133 +1,16 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Plugain Reklam Paneli</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .panel {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 400px;
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 10px;
-    }
-    p {
-      margin: 6px 0;
-    }
-    button {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #0088cc;
-      color: white;
-      cursor: pointer;
-    }
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugain Reklam</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="panel">
-    <h2>Hoş Geldin, <span id="username">...</span></h2>
-    <p>Puan: <span id="puan">0</span></p>
-    <p>Tıklama Sayısı: <span id="tiklama">0</span></p>
-    <button id="reklamBtn" onclick="reklamIzle()">Reklam İzle ve Puan Kazan</button>
-  </div>
+  <h1>Hoşgeldiniz!</h1>
+  <p>Reklam izlemek ve puan kazanmak için aşağıdaki bağlantıya tıklayın:</p>
+  <p><a id="reklam-link" href="#">Reklam İzlemeye Başla</a></p>
 
-  <script type="module">
-    import { database, ref, get, set, update } from './firebase.js';
-
-    // UID'yi URL parametresinden veya path'ten al
-    let uid = new URLSearchParams(window.location.search).get("uid");
-    if (!uid) {
-      const pathParts = window.location.pathname.split('/');
-      if (pathParts[1] === "u" && pathParts[2]) {
-        uid = pathParts[2];
-      }
-    }
-
-    // Telegram tarayıcısıysa uyarı ver
-    if (navigator.userAgent.includes("Telegram")) {
-      alert("Bazı özellikler Telegram içinden düzgün çalışmayabilir. Lütfen tarayıcıda açın.");
-    }
-
-    if (!uid) {
-      document.body.innerHTML = `
-        <div style="text-align:center; font-family:sans-serif; padding:40px;">
-          <h2>Hata</h2>
-          <p>Kullanıcı ID'si (uid) URL'de bulunamadı.</p>
-          <p>Lütfen Telegram üzerinden tekrar giriş yap.</p>
-        </div>`;
-      throw new Error("UID parametresi eksik.");
-    }
-
-    const userRef = ref(database, "users/" + uid);
-    const today = new Date().toISOString().split("T")[0];
-
-    async function loadUserData() {
-      const snapshot = await get(userRef);
-      const data = snapshot.val();
-
-      if (!data) {
-        await set(userRef, {
-          name: "Bilinmeyen Kullanıcı",
-          username: "yok",
-          points: 0,
-          clickCount: 0,
-          lastClick: null
-        });
-        location.reload();
-        return;
-      }
-
-      let userText = data.name || "Anonim";
-      if (data.username && data.username !== "yok") {
-        userText += ` (@${data.username})`;
-      }
-      document.getElementById("username").innerText = userText;
-      document.getElementById("puan").innerText = data.points || 0;
-      document.getElementById("tiklama").innerText = data.clickCount || 0;
-
-      if (data.lastClick === today) {
-        const btn = document.getElementById("reklamBtn");
-        btn.disabled = true;
-        btn.innerText = "Bugün reklam izledin 🎉";
-      }
-    }
-
-    async function reklamIzle() {
-      const snapshot = await get(userRef);
-      const data = snapshot.val();
-      if (data.lastClick === today) return;
-
-      await update(userRef, {
-        clickCount: (data.clickCount || 0) + 1,
-        points: (data.points || 0) + 10,
-        lastClick: today
-      });
-
-      alert("Reklam izledin! +10 puan kazandın.");
-      location.reload();
-    }
-
-    loadUserData();
-    window.reklamIzle = reklamIzle;
-  </script>
+  <script src="index.js"></script>
 </body>
 </html>
