@@ -1,17 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+:root {
+  --bg: #ffffff;
+  --text: #333;
+  --card: #fafafa;
+  --button: #007bff;
+  --button-hover: #0056b3;
+  --coin-bg: #f7f7f7;
+}
+
+body.dark {
+  --bg: #121212;
+  --text: #f1f1f1;
+  --card: #1e1e1e;
+  --button: #27ae60;
+  --button-hover: #219150;
+  --coin-bg: #2a2a2a;
+}
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(to right, #dce35b, #45b649);
+  background: var(--bg);
+  color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
-  background: #fff;
+  background: var(--card);
   padding: 25px;
   border-radius: 20px;
   max-width: 400px;
@@ -19,6 +37,26 @@ body {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   text-align: center;
+  position: relative;
+}
+
+.toggle-mode {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: transparent;
+  border: 2px solid var(--text);
+  color: var(--text);
+  padding: 5px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.toggle-mode:hover {
+  background: var(--text);
+  color: var(--bg);
 }
 
 .header {
@@ -27,14 +65,8 @@ body {
   align-items: center;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
-}
-
 .coins {
-  background-color: #f7f7f7;
+  background-color: var(--coin-bg);
   padding: 8px 12px;
   border-radius: 12px;
   font-weight: 600;
@@ -49,15 +81,14 @@ body {
   text-align: left;
   margin-top: 20px;
   font-size: 15px;
-  color: #555;
   line-height: 1.8;
-  background: #fafafa;
+  background: var(--coin-bg);
   padding: 15px;
   border-radius: 12px;
 }
 
 button#watch-ad {
-  background: #007bff;
+  background: var(--button);
   color: #fff;
   border: none;
   font-size: 16px;
@@ -71,7 +102,7 @@ button#watch-ad {
 }
 
 button#watch-ad:hover {
-  background: #0056b3;
+  background: var(--button-hover);
   transform: translateY(-2px);
 }
 
