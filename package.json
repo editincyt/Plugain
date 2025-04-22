@@ -1,5 +1,5 @@
 {
-  "name": "plugain-bot",
+  "name": "plugain-reklam-bot",
   "version": "1.0.0",
   "description": "Telegram bot to display ads and reward users",
   "main": "index.js",
