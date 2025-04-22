@@ -1,118 +1,90 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Plugain - Reklam İzle ve Kazan</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f4f4f4, #e9efff);
-      margin: 0;
-      padding: 2rem;
-      color: #333;
-      text-align: center;
-    }
-    h2 {
-      color: #2e3a59;
-      margin-bottom: 1.5rem;
-    }
-    #user-info {
-      background-color: #fff;
-      padding: 1.5rem;
-      margin: auto;
-      max-width: 360px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
-    }
-    #user-info p {
-      font-size: 1rem;
-      margin: 0.5rem 0;
-    }
-    button#watch-ad {
-      background-color: #007bff;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-    button#watch-ad:hover {
-      background-color: #0056b3;
-      transform: scale(1.03);
-    }
-  </style>
-  <script type="module">
-    // Firebase ayarları
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, get, set, update, child } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-    const firebaseConfig = {
-      databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const uid = urlParams.get("uid");
-
-    if (!uid) {
-      document.body.innerHTML = "<h2>Hata</h2><p>Kullanıcı ID'si (uid) URL'de bulunamadı.<br><br>Lütfen Telegram üzerinden tekrar giriş yap.</p>";
-    } else {
-      const userRef = ref(db, 'users/' + uid);
-
-      get(userRef).then(snapshot => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          document.getElementById("user-name").textContent = data.name || "Bilinmiyor";
-          document.getElementById("click-count").textContent = data.clickCount || 0;
-          document.getElementById("user-points").textContent = data.points || 0;
-          document.getElementById("plugin-coin").textContent = Math.floor((data.points || 0) / 100);
-        }
-      });
-
-      document.getElementById("watch-ad").addEventListener("click", async () => {
-        const now = new Date().toDateString();
-
-        get(userRef).then(snapshot => {
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            if (data.lastClick === now) {
-              alert("Bugün zaten reklam izlediniz. Yarın tekrar deneyin!");
-              return;
-            }
-
-            const newPoints = (data.points || 0) + 10;
-            const newClickCount = (data.clickCount || 0) + 1;
-
-            update(userRef, {
-              points: newPoints,
-              clickCount: newClickCount,
-              lastClick: now
-            }).then(() => {
-              document.getElementById("user-points").textContent = newPoints;
-              document.getElementById("click-count").textContent = newClickCount;
-              document.getElementById("plugin-coin").textContent = Math.floor(newPoints / 100);
-              alert("Reklam izlendi! 10 puan kazandınız.");
-            });
-          }
-        });
-      });
-    }
-  </script>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Plugain - Reklam İzle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <h2>Reklam İzle ve Puan Kazan</h2>
+  <h2>Plugain - Reklam İzle ve Puan Kazan</h2>
   <div id="user-info">
     <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
     <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
     <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
-    <p><strong>PluginCoin:</strong> <span id="plugin-coin">Yükleniyor...</span></p>
   </div>
-  <button id="watch-ad">Reklam İzle</button>
+  <button id="watch-ad">🎥 Reklam İzle</button>
+
+  <script>
+    // Firebase yapılandırması
+    const firebaseConfig = {
+      databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Telegram WebApp üzerinden kullanıcıyı al
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // uygulamayı genişlet
+
+    const user = tg.initDataUnsafe?.user;
+
+    if (!user || !user.id) {
+      alert("Telegram kullanıcı verisi alınamadı. Lütfen Telegram uygulamasından tekrar deneyin.");
+      throw new Error("Telegram WebApp kullanıcı verisi yok.");
+    }
+
+    const uid = user.id.toString();
+    const name = user.first_name || `ID: ${uid}`;
+    const userRef = db.ref('users/' + uid);
+
+    // Firebase'den kullanıcı verisini al veya oluştur
+    userRef.once('value').then(snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        document.getElementById('user-name').textContent = data.name || name;
+        document.getElementById('click-count').textContent = data.clickCount || 0;
+        document.getElementById('user-points').textContent = data.points || 0;
+      } else {
+        userRef.set({
+          name,
+          points: 0,
+          clickCount: 0,
+          lastClick: ""
+        });
+        document.getElementById('user-name').textContent = name;
+        document.getElementById('click-count').textContent = 0;
+        document.getElementById('user-points').textContent = 0;
+      }
+    });
+
+    // Reklam izleme butonu
+    document.getElementById('watch-ad').addEventListener('click', async () => {
+      const now = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const snap = await userRef.get();
+      const data = snap.val();
+
+      if (data.lastClick === now) {
+        alert("Bugün zaten reklam izlediniz.");
+        return;
+      }
+
+      const newPoints = (data.points || 0) + 10;
+      const newClicks = (data.clickCount || 0) + 1;
+
+      await userRef.update({
+        points: newPoints,
+        clickCount: newClicks,
+        lastClick: now
+      });
+
+      document.getElementById('click-count').textContent = newClicks;
+      document.getElementById('user-points').textContent = newPoints;
+      alert("🎉 10 puan kazandınız!");
+    });
+  </script>
 </body>
 </html>
