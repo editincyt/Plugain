@@ -1,15 +1,28 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to right, #f4f4f4, #e9efff);
   margin: 0;
   padding: 2rem;
   color: #333;
   text-align: center;
+  position: relative;
+}
+
+#plugaincoin-display {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #007bff;
+  background-color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 h2 {
-  color: #2e3a59;
-  margin-bottom: 1.5rem;
+  margin-top: 3rem;
 }
 
 #user-info {
@@ -27,7 +40,7 @@ h2 {
   margin: 0.5rem 0;
 }
 
-button#watch-ad {
+#watch-ad {
   background-color: #007bff;
   color: white;
   padding: 0.75rem 1.5rem;
@@ -38,21 +51,7 @@ button#watch-ad {
   transition: 0.3s ease;
 }
 
-button#watch-ad:hover {
+#watch-ad:hover {
   background-color: #0056b3;
   transform: scale(1.03);
-}
-
-@media (max-width: 480px) {
-  body {
-    padding: 1rem;
-  }
-
-  #user-info {
-    padding: 1rem;
-  }
-
-  button#watch-ad {
-    width: 100%;
-  }
 }
