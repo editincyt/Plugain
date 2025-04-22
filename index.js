@@ -1,23 +1,9 @@
-import { Telegraf } from 'telegraf';
-import dotenv from 'dotenv';
-import { initializeApp, applicationDefault } from 'firebase-admin/app';
-import { getDatabase } from 'firebase-admin/database';
-
-dotenv.config();
-
-const bot = new Telegraf(process.env.BOT_TOKEN);
-
-// Firebase başlat
-initializeApp({
-  credential: applicationDefault(),
-  databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
-});
-
-const db = getDatabase();
-
 bot.start(async (ctx) => {
   const userId = ctx.from.id.toString();
-  const name = ctx.from.first_name;
+  const firstName = ctx.from.first_name || "";
+  const lastName = ctx.from.last_name || "";
+  const fullName = `${firstName} ${lastName}`.trim();
+  const username = ctx.from.username || null;
 
   const userRef = db.ref('users/' + userId);
 
@@ -25,15 +11,18 @@ bot.start(async (ctx) => {
 
   if (!snapshot.exists()) {
     await userRef.set({
-      name,
+      name: fullName,
+      username: username,
       points: 0,
       clickCount: 0,
       lastClick: null
     });
+  } else {
+    // Kullanıcı varsa da username güncel olsun (Telegram'da sonradan ekleyebilir)
+    await userRef.update({ name: fullName, username });
   }
 
-  const siteURL = `https://plugain.vercel.app/?uid=${userId}`;
-  ctx.reply(`Merhaba ${name}! 👋\nReklam izlemek ve puan kazanmak için siteye git:\n\n🔗 ${siteURL}`);
+  // Telegram için daha stabil çalışan yol formatı: /u/:uid
+  const siteURL = `https://plugain.vercel.app/u/${userId}`;
+  ctx.reply(`Merhaba ${fullName || "kullanıcı"}! 👋\nReklam izlemek ve puan kazanmak için aşağıdaki bağlantıya tıkla:\n\n🔗 ${siteURL}`);
 });
-
-bot.launch();
