@@ -1,78 +1,72 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Plugain - Reklam İzle ve Puan Kazan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plugain - Reklam İzle</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f4f4f4, #e9efff);
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
       margin: 0;
-      padding: 2rem;
-      color: #333;
+      padding: 20px;
       text-align: center;
-      position: relative;
     }
-    #plugaincoin-display {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #007bff;
-      background-color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-top: 3rem;
+    h1 {
+      color: #333;
     }
     #user-info {
-      background-color: #fff;
-      padding: 1.5rem;
-      margin: auto;
-      max-width: 350px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
-    }
-    #user-info p {
-      font-size: 1rem;
-      margin: 0.5rem 0;
-    }
-    #watch-ad {
-      background-color: #007bff;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border: none;
+      margin: 20px auto;
+      background: #fff;
       border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s ease;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: relative;
     }
-    #watch-ad:hover {
-      background-color: #0056b3;
-      transform: scale(1.03);
+    #plugain-coin-badge {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: gold;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <div id="plugaincoin-display">PlugainCoin: <span id="plugaincoin">0</span> 🪙</div>
+  <h1>Reklam İzle ve Puan Kazan</h1>
 
-  <h2>Reklam İzle ve Puan Kazan</h2>
   <div id="user-info">
+    <div id="plugain-coin-badge">🏅 0 PC</div>
     <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
     <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
     <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
   </div>
+
   <button id="watch-ad">Reklam İzle</button>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
     const firebaseConfig = {
       databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -83,50 +77,59 @@
 
     const uid = new URLSearchParams(window.location.search).get('uid');
     if (!uid) {
-      alert("Kullanıcı ID'si (uid) URL'de bulunamadı.\nLütfen Telegram üzerinden tekrar giriş yapın.");
-      throw new Error("Kullanıcı ID'si eksik.");
+      alert("Kullanıcı ID'si alınamadı. Lütfen Telegram'dan tekrar giriş yapınız.");
+      throw new Error("UID yok");
     }
 
     const userRef = ref(db, 'users/' + uid);
 
-    document.getElementById('watch-ad').addEventListener('click', async () => {
-      const snapshot = await get(userRef);
-      const user = snapshot.val();
+    let userData = null;
 
+    function updateUI(data) {
+      document.getElementById("user-name").textContent = data.name || "Bilinmiyor";
+      document.getElementById("click-count").textContent = data.clickCount || 0;
+      document.getElementById("user-points").textContent = data.points || 0;
+      document.getElementById("plugain-coin-badge").textContent = `🏅 ${data.plugainCoins || 0} PC`;
+    }
+
+    get(userRef).then(snapshot => {
+      if (!snapshot.exists()) {
+        alert("Kullanıcı bulunamadı. Lütfen Telegram'dan giriş yapın.");
+        return;
+      }
+      userData = snapshot.val();
+      updateUI(userData);
+    });
+
+    document.getElementById("watch-ad").addEventListener("click", async () => {
       const now = new Date();
-      const lastClick = user.lastClick ? new Date(user.lastClick) : null;
-      const canClick = !lastClick || (now.toDateString() !== new Date(lastClick).toDateString());
+      const today = now.toISOString().split('T')[0];
+      const lastClick = userData.lastClick?.split('T')[0];
 
-      if (!canClick) {
+      if (lastClick === today) {
         alert("Bugün zaten reklam izlediniz. Yarın tekrar gelin!");
         return;
       }
 
-      let newClickCount = (user.clickCount || 0) + 1;
-      let newPoints = (user.points || 0) + 10;
-      let newPlugainCoins = Math.floor(newPoints / 100);
+      const newPoints = (userData.points || 0) + 10;
+      const newClickCount = (userData.clickCount || 0) + 1;
+      const newPlugainCoins = Math.floor(newPoints / 100);
 
       await update(userRef, {
-        clickCount: newClickCount,
         points: newPoints,
+        clickCount: newClickCount,
         plugainCoins: newPlugainCoins,
         lastClick: now.toISOString()
       });
 
-      loadUserData(); // veriyi yeniden yükle
+      userData.points = newPoints;
+      userData.clickCount = newClickCount;
+      userData.plugainCoins = newPlugainCoins;
+      userData.lastClick = now.toISOString();
+      updateUI(userData);
+
+      alert("Reklam izlendi! +10 puan kazandınız.");
     });
-
-    async function loadUserData() {
-      const snapshot = await get(userRef);
-      const user = snapshot.val();
-
-      document.getElementById('user-name').innerText = user.name || 'Bilinmiyor';
-      document.getElementById('click-count').innerText = user.clickCount || 0;
-      document.getElementById('user-points').innerText = user.points || 0;
-      document.getElementById('plugaincoin').innerText = user.plugainCoins || 0;
-    }
-
-    loadUserData();
   </script>
 </body>
 </html>
