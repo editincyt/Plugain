@@ -1,19 +1,11 @@
-bot.start(async (ctx) => {
-  const userId = ctx.from.id.toString();
-  const name = ctx.from.first_name;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-  const userRef = db.ref('users/' + userId);
-  const snapshot = await userRef.get();
+const firebaseConfig = {
+  databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
+};
 
-  if (!snapshot.exists()) {
-    await userRef.set({
-      name,
-      points: 0,
-      clickCount: 0,
-      lastClick: ""
-    });
-  }
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-  const siteURL = `https://plugain.vercel.app/?uid=${userId}`;
-  ctx.reply(`Merhaba ${name}!\nReklam izlemek ve puan kazanmak için siteye git:\n\n🔗 ${siteURL}`);
-});
+export { db };
