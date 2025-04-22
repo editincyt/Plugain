@@ -53,7 +53,19 @@
   <script type="module">
     import { database, ref, get, set, update } from './firebase.js';
 
-    const uid = new URLSearchParams(window.location.search).get("uid");
+    // UID'yi URL parametresinden veya path'ten al
+    let uid = new URLSearchParams(window.location.search).get("uid");
+    if (!uid) {
+      const pathParts = window.location.pathname.split('/');
+      if (pathParts[1] === "u" && pathParts[2]) {
+        uid = pathParts[2];
+      }
+    }
+
+    // Telegram tarayıcısıysa uyarı ver
+    if (navigator.userAgent.includes("Telegram")) {
+      alert("Bazı özellikler Telegram içinden düzgün çalışmayabilir. Lütfen tarayıcıda açın.");
+    }
 
     if (!uid) {
       document.body.innerHTML = `
