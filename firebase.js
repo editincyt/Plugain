@@ -2,22 +2,19 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
-// Firebase yapılandırma bilgileri
+// Firebase yapılandırması
 const firebaseConfig = {
-  apiKey: "API_KEY",  // Firebase API Key
-  authDomain: "plugain-1f481.firebaseapp.com",
-  databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/",
-  projectId: "plugain-1f481",
-  storageBucket: "plugain-1f481.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID",
-  measurementId: "G-MEASUREMENT_ID"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-// Firebase uygulamasını başlat
+// Firebase'i başlat
 const app = initializeApp(firebaseConfig);
-
-// Firebase Realtime Database bağlantısını al
 const db = getDatabase(app);
 
 export { db };
