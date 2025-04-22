@@ -1,49 +1,46 @@
-import { Telegraf } from 'telegraf';
-import dotenv from 'dotenv';
 import { db } from './firebase.js';
 
-dotenv.config();
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('uid');
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+// Kullanıcı verilerini Firebase'den al
+const userRef = db.ref('users/' + userId);
+userRef.once('value', (snapshot) => {
+  if (snapshot.exists()) {
+    const userData = snapshot.val();
+    document.getElementById('user-name').textContent = userData.name;
+    document.getElementById('click-count').textContent = userData.clickCount;
+    document.getElementById('user-points').textContent = userData.points;
 
-bot.start(async (ctx) => {
-  const userId = ctx.from.id.toString();
-  const firstName = ctx.from.first_name || "";
-  const lastName = ctx.from.last_name || "";
-  const fullName = `${firstName} ${lastName}`.trim();
-  const username = ctx.from.username || null;
+    const now = new Date();
+    const lastClickDate = new Date(userData.lastClick);
 
-  const userRef = db.ref('users/' + userId);
+    // Eğer kullanıcı bugünkü tıklama limitini aşmamışsa
+    if (lastClickDate.toDateString() !== now.toDateString() && userData.clickCount < 1) {
+      // Reklam izleme butonunu etkinleştir
+      document.getElementById('watch-ad').addEventListener('click', () => {
+        // Puan kazanma işlemi
+        userData.points += 10; // Örneğin 10 puan kazanacak
+        userData.clickCount += 1;
+        userData.lastClick = now.toISOString();
 
-  const snapshot = await userRef.get();
+        // Veriyi Firebase'e güncelle
+        userRef.update({
+          points: userData.points,
+          clickCount: userData.clickCount,
+          lastClick: userData.lastClick
+        });
 
-  if (!snapshot.exists()) {
-    await userRef.set({
-      name: fullName,
-      username: username,
-      points: 0,
-      clickCount: 0,
-      lastClick: null
-    });
-  } else {
-    // Kullanıcı varsa da username güncel olsun
-    await userRef.update({ name: fullName, username });
-  }
-
-  // Web App URL'si
-  const siteURL = `https://plugain.vercel.app/u/${userId}`;
-
-  // Telegram inline butonu ile Web App'i başlatma
-  ctx.reply(`Merhaba ${fullName || "kullanıcı"}! 👋\nReklam izlemek ve puan kazanmak için aşağıdaki butona tıklayın:`, {
-    reply_markup: {
-      inline_keyboard: [
-        [{
-          text: "Reklam İzlemeye Başla",
-          web_app: { url: siteURL } // Burada Web App URL'si veriliyor
-        }]
-      ]
+        // Kullanıcıyı bilgilendir
+        alert('Reklam izlediniz ve 10 puan kazandınız!');
+        window.location.reload();
+      });
+    } else {
+      // Eğer tıklama limiti aşılmışsa, butonu devre dışı bırak
+      document.getElementById('watch-ad').disabled = true;
+      alert('Bugün yalnızca bir kere reklam izleyebilirsiniz.');
     }
-  });
+  } else {
+    alert('Kullanıcı bulunamadı.');
+  }
 });
-
-bot.launch();
