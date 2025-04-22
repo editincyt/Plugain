@@ -1,21 +1,19 @@
-// firebase.js
+bot.start(async (ctx) => {
+  const userId = ctx.from.id.toString();
+  const name = ctx.from.first_name;
 
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, get, update } from 'firebase/database';
+  const userRef = db.ref('users/' + userId);
+  const snapshot = await userRef.get();
 
-// Firebase yapılandırma bilgilerini buraya ekleyin
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+  if (!snapshot.exists()) {
+    await userRef.set({
+      name,
+      points: 0,
+      clickCount: 0,
+      lastClick: ""
+    });
+  }
 
-// Firebase'i başlat
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-export { db, ref, set, get, update };
+  const siteURL = `https://plugain.vercel.app/?uid=${userId}`;
+  ctx.reply(`Merhaba ${name}!\nReklam izlemek ve puan kazanmak için siteye git:\n\n🔗 ${siteURL}`);
+});
