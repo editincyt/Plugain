@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Reklam Paneli</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f1f1f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .panel {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h2>Hoş geldin, <span id="username">...</span></h2>
+    <p>Puan: <span id="puan">0</span></p>
+    <p>Tıklama Sayısı: <span id="tiklama">0</span></p>
+    <button id="reklamBtn" onclick="reklamIzle()">Reklamı İzle</button>
+  </div>
+
+  <script type="module">
+    import { database, ref, get, set, update } from './firebase.js';
+
+    const uid = new URLSearchParams(window.location.search).get("uid");
+    if (!uid) {
+      alert("Kullanıcı ID'si (uid) URL'de bulunamadı!");
+      throw new Error("UID eksik.");
+    }
+
+    const userRef = ref(database, "users/" + uid);
+    const today = new Date().toISOString().split("T")[0];
+
+    async function loadUserData() {
+      const snapshot = await get(userRef);
+      const data = snapshot.val();
+
+      if (!data) {
+        await set(userRef, {
+          name: "Yeni Kullanıcı",
+          clickCount: 0,
+          lastClick: null,
+          points: 0
+        });
+        return location.reload();
+      }
+
+      document.getElementById("username").innerText = data.name;
+      document.getElementById("puan").innerText = data.points;
+      document.getElementById("tiklama").innerText = data.clickCount;
+
+      if (data.lastClick === today) {
+        const btn = document.getElementById("reklamBtn");
+        btn.disabled = true;
+        btn.innerText = "Bugün zaten izledin";
+      }
+    }
+
+    async function reklamIzle() {
+      const snapshot = await get(userRef);
+      const data = snapshot.val();
+
+      if (data.lastClick === today) return;
+
+      await update(userRef, {
+        clickCount: (data.clickCount || 0) + 1,
+        points: (data.points || 0) + 10,
+        lastClick: today
+      });
+
+      alert("Reklam izledin! +10 puan");
+      location.reload();
+    }
+
+    loadUserData();
+    window.reklamIzle = reklamIzle;
+  </script>
+</body>
+</html>
