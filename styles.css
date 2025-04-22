@@ -1,17 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 body {
-  font-family: sans-serif;
-  background-color: #f2f2f2;
   margin: 0;
-  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to right, #dce35b, #45b649);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .container {
-  max-width: 400px;
-  margin: auto;
   background: #fff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 25px;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  text-align: center;
 }
 
 .header {
@@ -20,24 +27,54 @@ body {
   align-items: center;
 }
 
-.coins {
-  font-size: 18px;
-  font-weight: bold;
-  color: green;
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
 }
 
-#watch-ad {
-  width: 100%;
-  padding: 15px;
-  margin-top: 20px;
+.coins {
+  background-color: #f7f7f7;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #27ae60;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 16px;
-  background-color: #0077cc;
-  color: white;
+}
+
+#user-info {
+  text-align: left;
+  margin-top: 20px;
+  font-size: 15px;
+  color: #555;
+  line-height: 1.8;
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+button#watch-ad {
+  background: #007bff;
+  color: #fff;
   border: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px 20px;
   border-radius: 12px;
   cursor: pointer;
+  margin-top: 25px;
+  transition: transform 0.2s ease, background 0.3s ease;
+  width: 100%;
 }
 
-#watch-ad:hover {
-  background-color: #005fa3;
+button#watch-ad:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+button#watch-ad:active {
+  transform: scale(0.98);
 }
