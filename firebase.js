@@ -1,8 +1,9 @@
 // firebase.js
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
 
-// Firebase yapılandırması
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, set, get, update } from 'firebase/database';
+
+// Firebase yapılandırma bilgilerini buraya ekleyin
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -17,4 +18,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-export { db };
+export { db, ref, set, get, update };
