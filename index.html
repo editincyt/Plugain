@@ -1,90 +1,23 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8">
-  <title>Plugain - Reklam İzle</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugain - Reklam İzle ve Puan Kazan</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h2>Plugain - Reklam İzle ve Puan Kazan</h2>
-  <div id="user-info">
-    <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
-    <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
-    <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
-  </div>
-  <button id="watch-ad">🎥 Reklam İzle</button>
+    <div id="plugaincoin-display">PlugainCoin: <span id="plugaincoin">0</span> 🪙</div>
 
-  <script>
-    // Firebase yapılandırması
-    const firebaseConfig = {
-      databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    <h2>Reklam İzle ve Puan Kazan</h2>
+    <div id="user-info">
+        <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
+        <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
+        <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
+    </div>
+    <button id="watch-ad">Reklam İzle</button>
 
-    // Telegram WebApp üzerinden kullanıcıyı al
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // uygulamayı genişlet
-
-    const user = tg.initDataUnsafe?.user;
-
-    if (!user || !user.id) {
-      alert("Telegram kullanıcı verisi alınamadı. Lütfen Telegram uygulamasından tekrar deneyin.");
-      throw new Error("Telegram WebApp kullanıcı verisi yok.");
-    }
-
-    const uid = user.id.toString();
-    const name = user.first_name || `ID: ${uid}`;
-    const userRef = db.ref('users/' + uid);
-
-    // Firebase'den kullanıcı verisini al veya oluştur
-    userRef.once('value').then(snapshot => {
-      const data = snapshot.val();
-      if (data) {
-        document.getElementById('user-name').textContent = data.name || name;
-        document.getElementById('click-count').textContent = data.clickCount || 0;
-        document.getElementById('user-points').textContent = data.points || 0;
-      } else {
-        userRef.set({
-          name,
-          points: 0,
-          clickCount: 0,
-          lastClick: ""
-        });
-        document.getElementById('user-name').textContent = name;
-        document.getElementById('click-count').textContent = 0;
-        document.getElementById('user-points').textContent = 0;
-      }
-    });
-
-    // Reklam izleme butonu
-    document.getElementById('watch-ad').addEventListener('click', async () => {
-      const now = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-      const snap = await userRef.get();
-      const data = snap.val();
-
-      if (data.lastClick === now) {
-        alert("Bugün zaten reklam izlediniz.");
-        return;
-      }
-
-      const newPoints = (data.points || 0) + 10;
-      const newClicks = (data.clickCount || 0) + 1;
-
-      await userRef.update({
-        points: newPoints,
-        clickCount: newClicks,
-        lastClick: now
-      });
-
-      document.getElementById('click-count').textContent = newClicks;
-      document.getElementById('user-points').textContent = newPoints;
-      alert("🎉 10 puan kazandınız!");
-    });
-  </script>
+    <script src="firebase.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
