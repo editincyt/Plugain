@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plugain - Reklam İzle</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Plugain</h1>
+      <div class="coins">💰 <span id="plugain-coin">0</span></div>
+    </div>
+    <div id="user-info">
+      <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
+      <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
+      <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
+    </div>
+    <button id="watch-ad">🎬 Reklam İzle ve Puan Kazan</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    import { firebaseConfig } from './firebase.js';
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const user = tg.initDataUnsafe.user;
+
+    if (!user || !user.id) {
+      alert("Telegram kullanıcı verileri alınamadı.");
+      throw new Error("Kullanıcı verisi alınamadı");
+    }
+
+    const uid = user.id;
+    const name = user.username || user.first_name || "Bilinmeyen";
+
+    const userRef = ref(db, 'users/' + uid);
+
+    get(userRef).then(snapshot => {
+      if (!snapshot.exists()) {
+        set(userRef, {
+          name: name,
+          points: 0,
+          clickCount: 0,
+          plugainCoins: 0,
+          lastClick: null
+        });
+      }
+    });
+
+    function updateUI(data) {
+      document.getElementById("user-name").textContent = data.name;
+      document.getElementById("click-count").textContent = data.clickCount || 0;
+      document.getElementById("user-points").textContent = data.points || 0;
+      document.getElementById("plugain-coin").textContent = data.plugainCoins || 0;
+    }
+
+    async function fetchUserData() {
+      const snap = await get(userRef);
+      if (snap.exists()) {
+        updateUI(snap.val());
+      }
+    }
+
+    fetchUserData();
+
+    document.getElementById("watch-ad").addEventListener("click", async () => {
+      const snap = await get(userRef);
+      if (!snap.exists()) return;
+
+      const userData = snap.val();
+      const now = new Date();
+      const lastClick = new Date(userData.lastClick || 0);
+      const sameDay = now.toDateString() === lastClick.toDateString();
+
+      if (sameDay) {
+        alert("Bugün zaten reklam izlediniz. Yarın tekrar gelin!");
+        return;
+      }
+
+      const newPoints = (userData.points || 0) + 10;
+      const plugainCoins = Math.floor(newPoints / 100);
+
+      update(userRef, {
+        points: newPoints,
+        clickCount: (userData.clickCount || 0) + 1,
+        plugainCoins: plugainCoins,
+        lastClick: now.toISOString()
+      });
+
+      fetchUserData();
+    });
+  </script>
+</body>
+</html>
