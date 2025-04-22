@@ -2,55 +2,62 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Reklam Paneli</title>
+  <title>Plugain Reklam Paneli</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f1f1f1;
+      background: #f9f9f9;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
     .panel {
-      background: white;
+      background: #fff;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       width: 400px;
       text-align: center;
     }
+    h2 {
+      margin-bottom: 10px;
+    }
+    p {
+      margin: 6px 0;
+    }
     button {
       margin-top: 20px;
-      padding: 12px 20px;
-      background: #0088cc;
-      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
       border: none;
       border-radius: 8px;
+      background-color: #0088cc;
+      color: #fff;
       cursor: pointer;
-      font-size: 16px;
     }
     button:disabled {
-      background: gray;
+      background: #aaa;
       cursor: not-allowed;
     }
   </style>
 </head>
 <body>
   <div class="panel">
-    <h2>Hoş geldin, <span id="username">...</span></h2>
+    <h2>Hoş Geldin, <span id="username">...</span></h2>
     <p>Puan: <span id="puan">0</span></p>
     <p>Tıklama Sayısı: <span id="tiklama">0</span></p>
-    <button id="reklamBtn" onclick="reklamIzle()">Reklamı İzle</button>
+    <button id="reklamBtn" onclick="reklamIzle()">Reklam İzle ve Puan Kazan</button>
   </div>
 
+  <!-- Firebase ve App JS -->
   <script type="module">
     import { database, ref, get, set, update } from './firebase.js';
 
     const uid = new URLSearchParams(window.location.search).get("uid");
     if (!uid) {
-      alert("Kullanıcı ID'si (uid) URL'de bulunamadı!");
-      throw new Error("UID eksik.");
+      alert("Kullanıcı ID'si (uid) URL'de bulunamadı.");
+      throw new Error("Kullanıcı ID'si eksik.");
     }
 
     const userRef = ref(database, "users/" + uid);
@@ -62,29 +69,29 @@
 
       if (!data) {
         await set(userRef, {
-          name: "Yeni Kullanıcı",
+          name: "Bilinmeyen Kullanıcı",
+          points: 0,
           clickCount: 0,
-          lastClick: null,
-          points: 0
+          lastClick: null
         });
-        return location.reload();
+        location.reload();
+        return;
       }
 
-      document.getElementById("username").innerText = data.name;
-      document.getElementById("puan").innerText = data.points;
-      document.getElementById("tiklama").innerText = data.clickCount;
+      document.getElementById("username").innerText = data.name || "Anonim";
+      document.getElementById("puan").innerText = data.points || 0;
+      document.getElementById("tiklama").innerText = data.clickCount || 0;
 
       if (data.lastClick === today) {
         const btn = document.getElementById("reklamBtn");
         btn.disabled = true;
-        btn.innerText = "Bugün zaten izledin";
+        btn.innerText = "Bugün reklam izledin 🎉";
       }
     }
 
     async function reklamIzle() {
       const snapshot = await get(userRef);
       const data = snapshot.val();
-
       if (data.lastClick === today) return;
 
       await update(userRef, {
@@ -93,7 +100,7 @@
         lastClick: today
       });
 
-      alert("Reklam izledin! +10 puan");
+      alert("Reklam izledin! +10 puan kazandın.");
       location.reload();
     }
 
