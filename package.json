@@ -1,14 +1,14 @@
 {
-  "name": "plugain-reklam-bot",
+  "name": "plugain",
   "version": "1.0.0",
-  "description": "Telegram bot to display ads and reward users",
   "main": "index.js",
+  "dependencies": {
+    "firebase": "^9.0.0",
+    "telegraf": "^4.0.0"
+  },
   "scripts": {
     "start": "node index.js"
   },
-  "dependencies": {
-    "firebase-admin": "^11.0.0",
-    "dotenv": "^16.0.3",
-    "telegraf": "^4.7.0"
-  }
+  "author": "Your Name",
+  "license": "ISC"
 }
