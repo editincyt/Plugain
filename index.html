@@ -8,34 +8,36 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: "Segoe UI", sans-serif;
-      overflow: hidden;
-    }
-
-    #vanta-bg {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      z-index: -1;
-      top: 0;
-      left: 0;
-    }
-
     :root {
-      --bg-color: rgba(255,255,255,0.85);
+      --bg-color: #f9f9f9;
       --text-color: #222;
       --accent-color: #6200ea;
-      --card-bg: rgba(255,255,255,0.85);
+      --card-bg: #ffffff;
     }
 
     body.dark-mode {
-      --bg-color: rgba(18,18,18,0.85);
+      --bg-color: #121212;
       --text-color: #eee;
-      --card-bg: rgba(30,30,30,0.85);
+      --card-bg: #1e1e1e;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+    }
+
+    .vanta-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     .topbar {
@@ -45,20 +47,22 @@
       padding: 10px 20px;
       background-color: var(--card-bg);
       border-bottom: 1px solid #ccc;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      z-index: 2;
       position: relative;
-      z-index: 1;
     }
 
     .container {
       max-width: 400px;
-      margin: 60px auto;
+      margin: 40px auto;
       background-color: var(--card-bg);
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
       text-align: center;
+      transition: background 0.3s;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     h2 {
@@ -69,10 +73,9 @@
     p {
       font-size: 1.1rem;
       margin: 10px 0;
-      color: var(--text-color);
     }
 
-    button {
+    #watch-ad, #rewarded-ad {
       background-color: var(--accent-color);
       color: white;
       border: none;
@@ -84,12 +87,12 @@
       margin-top: 10px;
     }
 
-    button:hover {
+    #watch-ad:hover, #rewarded-ad:hover {
       background-color: #7e33e4;
       transform: scale(1.05);
     }
 
-    button:disabled {
+    #watch-ad:disabled {
       background-color: #aaa;
       cursor: not-allowed;
     }
@@ -106,6 +109,15 @@
       font-size: 1.5rem;
       cursor: pointer;
       color: var(--accent-color);
+      margin-left: auto;
+      transition: transform 0.2s ease, color 0.3s ease;
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    #dark-toggle:hover {
+      background-color: rgba(98, 0, 234, 0.1);
+      transform: scale(1.1);
     }
 
     @media (max-width: 500px) {
@@ -116,14 +128,14 @@
       h2 {
         font-size: 1.3rem;
       }
-      button {
+      #watch-ad, #rewarded-ad {
         width: 100%;
       }
     }
   </style>
 </head>
 <body>
-  <div id="vanta-bg"></div>
+  <div class="vanta-bg"></div>
 
   <div class="topbar">
     <span><strong>PlugainCoin:</strong> <span id="plugain-coin">0</span></span>
@@ -140,8 +152,28 @@
     <p id="countdown"></p>
   </div>
 
-  <!-- Reklam SDK Scripti -->
   <script src='//whephiwums.com/sdk.js' data-zone='9248782' data-sdk='show_9248782'></script>
+
+  <script>
+    var setVanta = () => {
+      if (window.VANTA) {
+        VANTA.NET({
+          el: ".vanta-bg",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x6200ea,
+          backgroundColor: 0x111111
+        });
+      }
+    };
+
+    window.addEventListener("DOMContentLoaded", setVanta);
+  </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -282,24 +314,6 @@
       });
 
       updateDarkIcon();
-    });
-  </script>
-
-  <script>
-    let vantaEffect;
-    window.addEventListener("DOMContentLoaded", () => {
-      vantaEffect = VANTA.NET({
-        el: "#vanta-bg",
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.0,
-        scaleMobile: 1.0,
-        color: 0x6200ea,
-        backgroundColor: 0x000000
-      });
     });
   </script>
 </body>
