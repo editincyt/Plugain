@@ -28,14 +28,7 @@
     transition: background 0.3s, color 0.3s;
   }
 
-  .main-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .topbar {
+  .main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,37 +37,22 @@
     border-bottom: 1px solid #ccc;
   }
 
-  .logo-area {
+  .brand-area {
     display: flex;
     align-items: center;
   }
 
-  .logo {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-  }
-
-  .brand {
+  .brand-icon {
     font-size: 1.5rem;
-    font-weight: bold;
-  }
-
-  .coin-area {
-    display: flex;
-    align-items: center;
-  }
-
-  .coin-label {
     margin-right: 10px;
   }
 
-  .coin-value {
+  .brand-title {
     font-size: 1.2rem;
     font-weight: bold;
   }
 
-  .icon-btn {
+  .header-btn {
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -85,12 +63,12 @@
     border-radius: 8px;
   }
 
-  .icon-btn:hover {
+  .header-btn:hover {
     background-color: rgba(98, 0, 234, 0.1);
     transform: scale(1.1);
   }
 
-  .container {
+  .main-content {
     max-width: 400px;
     margin: 40px auto;
     padding: 30px;
@@ -105,30 +83,38 @@
     backdrop-filter: blur(10px);
   }
 
-  h2 {
-    margin-bottom: 20px;
-    color: var(--accent-color);
+  .score-card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    backdrop-filter: blur(10px);
   }
 
-  h2 .icon {
-    margin-right: 10px;
-  }
-
-  .user-info {
-    margin-bottom: 20px;
-  }
-
-  .user-info div {
+  .score-row {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 10px;
   }
 
-  .btn-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .score-label {
+    font-weight: bold;
   }
 
-  .modern-btn {
+  .score-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .user-row {
+    margin-bottom: 10px;
+  }
+
+  .action-buttons {
+    margin-top: 20px;
+  }
+
+  .primary-btn {
     background-color: var(--accent-color);
     color: white;
     border: none;
@@ -140,17 +126,25 @@
     margin-bottom: 16px;
   }
 
-  .modern-btn:hover {
+  .primary-btn:hover {
     background-color: #7e33e4;
     transform: scale(1.05);
   }
 
-  .modern-btn.alt {
+  .secondary-btn {
     background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
   }
 
-  .modern-btn.alt:hover {
+  .secondary-btn:hover {
     background-color: #3e8e41;
+    transform: scale(1.05);
   }
 
   #countdown {
@@ -160,43 +154,43 @@
   }
 
   @media (max-width: 500px) {
-    .container {
+    .main-content {
       margin: 20px;
       padding: 20px;
-    }
-    h2 {
-      font-size: 1.3rem;
     }
   }
   </style>
 </head>
 <body>
-  <div class="main-wrapper">
-    <div class="topbar">
-      <div class="logo-area">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Flag_of_Turkey.svg" alt="Plugain Logo" class="logo">
-        <span class="brand">Plugain</span>
-      </div>
-      <div class="coin-area">
-        <span class="coin-label"><strong>PlugainCoin:</strong></span>
-        <span id="plugain-coin" class="coin-value">0</span>
-        <button id="dark-toggle" class="icon-btn" title="Tema Değiştir">🌙</button>
-      </div>
+  <header class="main-header">
+    <div class="brand-area">
+      <span class="brand-icon">🚀</span>
+      <span class="brand-title">Plugain MiniApp</span>
     </div>
-    <div class="container glass">
-      <h2><span class="icon">🎥</span> Reklam İzle & Puan Kazan</h2>
-      <div class="user-info">
-        <div><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></div>
-        <div><strong>Tıklama:</strong> <span id="click-count">Yükleniyor...</span></div>
-        <div><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></div>
+    <button id="dark-toggle" class="header-btn" title="Tema Değiştir">🌗</button>
+  </header>
+  <main class="main-content">
+    <section class="score-card">
+      <div class="score-row">
+        <span class="score-label">PlugainCoin</span>
+        <span id="plugain-coin" class="score-value">0</span>
       </div>
-      <div class="btn-group">
-        <button id="watch-ad" class="modern-btn">Puan Kazan</button>
-        <button id="rewarded-ad" class="modern-btn alt">Reklam İzle</button>
+      <div class="user-row">
+        <span>Kullanıcı:</span> <span id="user-name">Yükleniyor...</span>
       </div>
+      <div class="user-row">
+        <span>Tıklama:</span> <span id="click-count">Yükleniyor...</span>
+      </div>
+      <div class="user-row">
+        <span>Puan:</span> <span id="user-points">Yükleniyor...</span>
+      </div>
+    </section>
+    <section class="action-buttons">
+      <button id="watch-ad" class="primary-btn">Puan Kazan</button>
+      <button id="rewarded-ad" class="secondary-btn">Reklam İzle</button>
       <p id="countdown"></p>
-    </div>
-  </div>
+    </section>
+  </main>
   <!-- Reklam SDK Scripti (show_9248782 için) -->
   <script src='//whephiwums.com/sdk.js' data-zone='9248782' data-sdk='show_9248782'></script>
   <script type="module">
@@ -332,7 +326,7 @@
       const darkToggle = document.getElementById("dark-toggle");
 
       function updateDarkIcon() {
-        darkToggle.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌙";
+        darkToggle.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌗";
       }
 
       darkToggle.addEventListener("click", () => {
