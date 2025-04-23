@@ -10,31 +10,36 @@
     --bg-color: #f9f9f9;
     --text-color: #222;
     --accent-color: #6200ea;
-    --card-bg: #ffffff;
-  }
-
-  body.dark-mode {
-    --bg-color: #121212;
-    --text-color: #eee;
-    --card-bg: #1e1e1e;
+    --card-bg: rgba(255, 255, 255, 0.7); /* Şeffaf kart arka planı */
+    --button-hover: #7e33e4;
+    --button-bg: #6200ea;
   }
 
   body {
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", sans-serif;
-    background-color: var(--bg-color);
+    background: url('https://i.pinimg.com/originals/bc/e3/71/bce371a37eafe0c221bca702ff57f8aa.gif') no-repeat center center fixed; /* GIF arka planı */
+    background-size: cover;
     color: var(--text-color);
     transition: background 0.3s, color 0.3s;
+  }
+
+  body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #eee;
+    --card-bg: rgba(30, 30, 30, 0.8);
   }
 
   .main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 10px 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Yarı saydam arka plan */
+    color: white;
     border-bottom: 1px solid #ccc;
+    backdrop-filter: blur(10px);
   }
 
   .brand-area {
@@ -43,12 +48,12 @@
   }
 
   .brand-icon {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-right: 10px;
   }
 
   .brand-title {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
   }
 
@@ -59,8 +64,8 @@
     cursor: pointer;
     color: var(--accent-color);
     transition: transform 0.2s ease, color 0.3s ease;
-    padding: 5px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 50%;
   }
 
   .header-btn:hover {
@@ -74,21 +79,18 @@
     padding: 30px;
     border-radius: 16px;
     text-align: center;
-    transition: background 0.3s;
-  }
-
-  .glass {
     background-color: var(--card-bg);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    transition: background 0.3s;
   }
 
   .score-card {
     background-color: var(--card-bg);
     padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
   }
 
   .score-row {
@@ -115,7 +117,7 @@
   }
 
   .primary-btn {
-    background-color: var(--accent-color);
+    background-color: var(--button-bg);
     color: white;
     border: none;
     border-radius: 30px;
@@ -127,7 +129,7 @@
   }
 
   .primary-btn:hover {
-    background-color: #7e33e4;
+    background-color: var(--button-hover);
     transform: scale(1.05);
   }
 
@@ -191,7 +193,6 @@
       <p id="countdown"></p>
     </section>
   </main>
-  <!-- Reklam SDK Scripti (show_9248782 için) -->
   <script src='//whephiwums.com/sdk.js' data-zone='9248782' data-sdk='show_9248782'></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
