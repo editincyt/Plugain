@@ -228,6 +228,9 @@
         document.getElementById("plugain-coin").textContent = newCoin;
         watchBtn.disabled = true;
         updateCountdown(new Date(Date.now() + 86400000));
+
+        // ✅ Telegram üzerinden reklam linki açılıyor
+        tg.openLink("https://www.youtube.com");
       });
 
       const darkToggle = document.getElementById("dark-toggle");
