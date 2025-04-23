@@ -6,6 +6,114 @@
   <title>Plugain - Reklam İzle</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+    <style>
+  :root {
+    --bg-color: #f9f9f9;
+    --text-color: #222;
+    --accent-color: #6200ea;
+    --card-bg: #ffffff;
+  }
+
+  body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #eee;
+    --card-bg: #1e1e1e;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .container {
+    max-width: 400px;
+    margin: 40px auto;
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    text-align: center;
+    transition: background 0.3s;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    color: var(--accent-color);
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+  }
+
+  #watch-ad {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+  }
+
+  #watch-ad:hover {
+    background-color: #7e33e4;
+    transform: scale(1.05);
+  }
+
+  #watch-ad:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+
+  #countdown {
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--accent-color);
+  }
+
+  #dark-toggle {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--accent-color);
+    transition: transform 0.3s;
+  }
+
+  #dark-toggle:hover {
+    transform: rotate(20deg) scale(1.2);
+  }
+
+  @media (max-width: 500px) {
+    .container {
+      margin: 20px;
+      padding: 20px;
+    }
+    h2 {
+      font-size: 1.3rem;
+    }
+    #watch-ad {
+      width: 100%;
+    }
+  }
+</style>
+
     /* Stil kodları aynı kalabilir */
   </style>
 </head>
