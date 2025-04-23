@@ -1,5 +1,5 @@
 :root {
-  --bg: url('https://pixers.com.tr/duvar-resimleri/ozet-kristal-modern-arka-plan-62952305'); /* Buraya görsel URL'si ekleyin */
+  --bg: url('https://cdn.pixabay.com/photo/2020/11/07/01/28/abstract-5719221_1280.jpg'); /* Buraya görsel URL'si ekleyin */
   --text: #23272f;
   --card: #fff;
   --button: linear-gradient(90deg, #667eea, #764ba2);
@@ -8,7 +8,7 @@
 }
 
 body.dark {
-  --bg: url('https://pixers.com.tr/duvar-resimleri/ozet-kristal-modern-arka-plan-62952305'); /* Karanlık mod için farklı bir görsel URL'si ekleyin */
+  --bg: url('https://cdn.pixabay.com/photo/2020/11/07/01/28/abstract-5719221_1280.jpg'); /* Karanlık mod için farklı bir görsel URL'si ekleyin */
   --text: #f1f1f1;
   --card: #1e1e1e;
   --button: linear-gradient(90deg, #27ae60, #219150);
