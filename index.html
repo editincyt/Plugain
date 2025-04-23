@@ -23,28 +23,13 @@
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background-color: var(--bg-color);
     color: var(--text-color);
     transition: background 0.3s, color 0.3s;
   }
 
-  @keyframes gradientBG {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
   .container, .topbar {
     background-color: var(--card-bg);
-    backdrop-filter: blur(2px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
   }
 
@@ -155,7 +140,7 @@
 </head>
 <body>
   <video id="bg-video" autoplay loop muted playsinline>
-    <source src="arkaplan.mp4" type="video/mp4">
+    <source src="https://cdn.streamable.com/video/mp4/t8zujd.mp4" type="video/mp4">
   </video>
   <div class="topbar">
     <span><strong>PlugainCoin:</strong> <span id="plugain-coin">0</span></span>
