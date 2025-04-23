@@ -4,83 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Plugain - Reklam İzle</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #fff;
-      --text: #222;
-      --card: #f9f9f9;
-      --button: #007bff;
-      --button-hover: #0056b3;
-      --coin-bg: #efefef;
+      --bg: #fff; --text: #222; --card: #f9f9f9;
+      --button: #007bff; --button-hover: #0056b3; --coin-bg: #efefef;
     }
     body.dark {
-      --bg: #121212;
-      --text: #f1f1f1;
-      --card: #1e1e1e;
-      --button: #27ae60;
-      --button-hover: #219150;
-      --coin-bg: #2c2c2c;
+      --bg: #121212; --text: #f1f1f1; --card: #1e1e1e;
+      --button: #27ae60; --button-hover: #219150; --coin-bg: #2c2c2c;
     }
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      transition: 0.3s;
+      margin: 0; font-family: 'Segoe UI', sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; transition: 0.3s;
     }
     .container {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 16px;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-      position: relative;
-      text-align: center;
+      background: var(--card); padding: 20px;
+      border-radius: 16px; max-width: 400px;
+      width: 90%; box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      position: relative; text-align: center;
     }
     .toggle-mode {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: transparent;
-      border: 2px solid var(--text);
-      color: var(--text);
-      padding: 5px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 12px;
+      position: absolute; top: 10px; left: 10px;
+      background: transparent; border: 2px solid var(--text);
+      color: var(--text); padding: 5px 10px; border-radius: 10px;
+      cursor: pointer; font-size: 12px;
     }
     .coins {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--coin-bg);
-      padding: 5px 12px;
-      border-radius: 12px;
-      font-weight: bold;
-      color: #27ae60;
+      position: absolute; top: 10px; right: 10px;
+      background: var(--coin-bg); padding: 5px 12px;
+      border-radius: 12px; font-weight: bold; color: #27ae60;
     }
     #user-info {
-      margin-top: 20px;
-      text-align: left;
-      font-size: 15px;
-      background: var(--coin-bg);
-      padding: 15px;
-      border-radius: 12px;
+      margin-top: 20px; text-align: left; font-size: 15px;
+      background: var(--coin-bg); padding: 15px; border-radius: 12px;
     }
     #watch-ad {
-      margin-top: 20px;
-      background: var(--button);
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
+      margin-top: 20px; background: var(--button);
+      color: white; padding: 12px 20px; border: none;
+      border-radius: 12px; font-size: 16px; cursor: pointer;
       width: 100%;
     }
     #watch-ad:hover {
@@ -106,37 +70,37 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // Dark mode toggle
     function toggleDarkMode() {
       document.body.classList.toggle('dark');
       document.querySelector('.toggle-mode').textContent = 
         document.body.classList.contains('dark') ? '🌞 Light Mode' : '🌙 Dark Mode';
     }
 
-    // Firebase yapılandırması
     const firebaseConfig = {
       databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // UID alma
-    const urlParams = new URLSearchParams(window.location.search);
-    const uid = urlParams.get("uid");
+    window.addEventListener('DOMContentLoaded', async () => {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
 
-    if (!uid) {
-      alert("Kullanıcı ID'si (uid) URL'de bulunamadı. Lütfen Telegram üzerinden tekrar giriş yap.");
-      throw new Error("UID bulunamadı");
-    }
+      const user = tg.initDataUnsafe?.user;
 
-    const userRef = db.ref("users/" + uid);
+      if (!user) {
+        alert("Telegram kullanıcı bilgileri alınamadı. Lütfen Mini App üzerinden girin.");
+        return;
+      }
 
-    // Sayfa yüklendiğinde verileri getir
-    userRef.once("value").then((snapshot) => {
+      const uid = user.id.toString();
+      const name = user.first_name || "Kullanıcı";
+      const userRef = db.ref("users/" + uid);
+
+      const snapshot = await userRef.get();
       if (!snapshot.exists()) {
-        // Yeni kullanıcı ekle
-        userRef.set({
-          name: "Bilinmiyor",
+        await userRef.set({
+          name,
           points: 0,
           clickCount: 0,
           lastClick: null,
@@ -144,39 +108,37 @@
         });
       }
 
-      const data = snapshot.val();
-      document.getElementById("user-name").textContent = data.name || "Bilinmiyor";
+      const data = (await userRef.get()).val();
+      document.getElementById("user-name").textContent = data.name;
       document.getElementById("click-count").textContent = data.clickCount || 0;
       document.getElementById("user-points").textContent = data.points || 0;
       document.getElementById("plugain-coins").textContent = (data.plugainCoin || 0) + " PlugainCoin";
-    });
 
-    // Tıklama işlemi
-    document.getElementById("watch-ad").addEventListener("click", async () => {
-      const snapshot = await userRef.get();
-      const data = snapshot.val();
-      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("watch-ad").addEventListener("click", async () => {
+        const today = new Date().toISOString().split("T")[0];
+        const userData = (await userRef.get()).val();
 
-      if (data.lastClick === today) {
-        alert("Bugün zaten reklam izlediniz!");
-        return;
-      }
+        if (userData.lastClick === today) {
+          alert("Bugün zaten reklam izlediniz!");
+          return;
+        }
 
-      let newPoints = (data.points || 0) + 10;
-      let newClicks = (data.clickCount || 0) + 1;
-      let newCoins = Math.floor(newPoints / 100);
+        let newPoints = (userData.points || 0) + 10;
+        let newClicks = (userData.clickCount || 0) + 1;
+        let newCoins = Math.floor(newPoints / 100);
 
-      await userRef.update({
-        points: newPoints,
-        clickCount: newClicks,
-        lastClick: today,
-        plugainCoin: newCoins
+        await userRef.update({
+          points: newPoints,
+          clickCount: newClicks,
+          lastClick: today,
+          plugainCoin: newCoins
+        });
+
+        document.getElementById("click-count").textContent = newClicks;
+        document.getElementById("user-points").textContent = newPoints;
+        document.getElementById("plugain-coins").textContent = newCoins + " PlugainCoin";
+        alert("Reklam izlendi, 10 puan kazandınız!");
       });
-
-      document.getElementById("click-count").textContent = newClicks;
-      document.getElementById("user-points").textContent = newPoints;
-      document.getElementById("plugain-coins").textContent = newCoins + " PlugainCoin";
-      alert("Reklam izlendi, 10 puan kazandınız!");
     });
   </script>
 </body>
