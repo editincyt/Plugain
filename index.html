@@ -1,107 +1,182 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <div class="container">
-  <button class="toggle-mode" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-
-
-    
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Plugain - Reklam İzle</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #fff;
+      --text: #222;
+      --card: #f9f9f9;
+      --button: #007bff;
+      --button-hover: #0056b3;
+      --coin-bg: #efefef;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f1f1f1;
+      --card: #1e1e1e;
+      --button: #27ae60;
+      --button-hover: #219150;
+      --coin-bg: #2c2c2c;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: 0.3s;
+    }
+    .container {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      position: relative;
+      text-align: center;
+    }
+    .toggle-mode {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: transparent;
+      border: 2px solid var(--text);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .coins {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--coin-bg);
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    #user-info {
+      margin-top: 20px;
+      text-align: left;
+      font-size: 15px;
+      background: var(--coin-bg);
+      padding: 15px;
+      border-radius: 12px;
+    }
+    #watch-ad {
+      margin-top: 20px;
+      background: var(--button);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #watch-ad:hover {
+      background: var(--button-hover);
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>Plugain</h1>
-      <div class="coins">👻 <span id="plugain-coin">0</span></div>
-    </div>
+    <button class="toggle-mode" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    <div class="coins" id="plugain-coins">0 PlugainCoin</div>
+    <h2>Reklam İzle ve Puan Kazan</h2>
     <div id="user-info">
       <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
       <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
       <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
     </div>
-    <button id="watch-ad">🎬 Reklam İzle ve Puan Kazan</button>
+    <button id="watch-ad">Reklam İzle</button>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-    import { firebaseConfig } from './firebase.js';
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    const user = tg.initDataUnsafe.user;
-
-    if (!user || !user.id) {
-      alert("Telegram kullanıcı verileri alınamadı.");
-      throw new Error("Kullanıcı verisi alınamadı");
+  <script>
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      document.querySelector('.toggle-mode').textContent = 
+        document.body.classList.contains('dark') ? '🌞 Light Mode' : '🌙 Dark Mode';
     }
 
-    const uid = user.id;
-    const name = user.username || user.first_name || "Bilinmeyen";
+    // Firebase yapılandırması
+    const firebaseConfig = {
+      databaseURL: "https://plugain-1f481-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    const userRef = ref(db, 'users/' + uid);
+    // UID alma
+    const urlParams = new URLSearchParams(window.location.search);
+    const uid = urlParams.get("uid");
 
-    get(userRef).then(snapshot => {
+    if (!uid) {
+      alert("Kullanıcı ID'si (uid) URL'de bulunamadı. Lütfen Telegram üzerinden tekrar giriş yap.");
+      throw new Error("UID bulunamadı");
+    }
+
+    const userRef = db.ref("users/" + uid);
+
+    // Sayfa yüklendiğinde verileri getir
+    userRef.once("value").then((snapshot) => {
       if (!snapshot.exists()) {
-        set(userRef, {
-          name: name,
+        // Yeni kullanıcı ekle
+        userRef.set({
+          name: "Bilinmiyor",
           points: 0,
           clickCount: 0,
-          plugainCoins: 0,
-          lastClick: null
+          lastClick: null,
+          plugainCoin: 0
         });
       }
-    });
 
-    function updateUI(data) {
-      document.getElementById("user-name").textContent = data.name;
+      const data = snapshot.val();
+      document.getElementById("user-name").textContent = data.name || "Bilinmiyor";
       document.getElementById("click-count").textContent = data.clickCount || 0;
       document.getElementById("user-points").textContent = data.points || 0;
-      document.getElementById("plugain-coin").textContent = data.plugainCoins || 0;
-    }
+      document.getElementById("plugain-coins").textContent = (data.plugainCoin || 0) + " PlugainCoin";
+    });
 
-    async function fetchUserData() {
-      const snap = await get(userRef);
-      if (snap.exists()) {
-        updateUI(snap.val());
-      }
-    }
-
-    fetchUserData();
-
+    // Tıklama işlemi
     document.getElementById("watch-ad").addEventListener("click", async () => {
-      const snap = await get(userRef);
-      if (!snap.exists()) return;
+      const snapshot = await userRef.get();
+      const data = snapshot.val();
+      const today = new Date().toISOString().split("T")[0];
 
-      const userData = snap.val();
-      const now = new Date();
-      const lastClick = new Date(userData.lastClick || 0);
-      const sameDay = now.toDateString() === lastClick.toDateString();
-
-      if (sameDay) {
-        alert("Bugün zaten reklam izlediniz. Yarın tekrar gelin!");
+      if (data.lastClick === today) {
+        alert("Bugün zaten reklam izlediniz!");
         return;
       }
 
-      const newPoints = (userData.points || 0) + 10;
-      const plugainCoins = Math.floor(newPoints / 100);
+      let newPoints = (data.points || 0) + 10;
+      let newClicks = (data.clickCount || 0) + 1;
+      let newCoins = Math.floor(newPoints / 100);
 
-      update(userRef, {
+      await userRef.update({
         points: newPoints,
-        clickCount: (userData.clickCount || 0) + 1,
-        plugainCoins: plugainCoins,
-        lastClick: now.toISOString()
+        clickCount: newClicks,
+        lastClick: today,
+        plugainCoin: newCoins
       });
 
-      fetchUserData();
+      document.getElementById("click-count").textContent = newClicks;
+      document.getElementById("user-points").textContent = newPoints;
+      document.getElementById("plugain-coins").textContent = newCoins + " PlugainCoin";
+      alert("Reklam izlendi, 10 puan kazandınız!");
     });
   </script>
 </body>
