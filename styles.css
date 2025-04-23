@@ -19,7 +19,9 @@ body.dark {
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   color: var(--text);
   min-height: 100vh;
   width: 100vw;
@@ -31,20 +33,33 @@ body {
   overflow-x: hidden;
 }
 
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 #bg-video {
   display: none;
 }
 
 .container {
-  background: var(--card);
+  background: rgba(255,255,255,0.85);
   padding: 25px;
-  border-radius: 20px;
+  border-radius: 24px;
   max-width: 400px;
   width: 90vw;
   box-sizing: border-box;
   margin: 40px auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.10);
   overflow-wrap: break-word;
+  backdrop-filter: blur(2px);
 }
 
 .toggle-mode {
@@ -94,22 +109,29 @@ body {
   border-radius: 12px;
 }
 
-button#watch-ad {
+button, .btn {
   background: var(--button);
   color: #fff;
   border: none;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 14px 20px;
-  border-radius: 12px;
+  border-radius: 16px;
+  padding: 10px 20px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+button:hover, .btn:hover {
+  background: var(--button-hover);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+button#watch-ad {
   margin-top: 25px;
-  transition: transform 0.2s ease, background 0.3s ease;
   width: 100%;
 }
 
 button#watch-ad:hover {
-  background: var(--button-hover);
   transform: translateY(-2px);
 }
 
