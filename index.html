@@ -28,17 +28,66 @@
     transition: background 0.3s, color 0.3s;
   }
 
-  .container, .topbar {
-    background-color: var(--card-bg);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  .main-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
   }
 
   .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     padding: 10px 20px;
     border-bottom: 1px solid #ccc;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .coin-area {
+    display: flex;
+    align-items: center;
+  }
+
+  .coin-label {
+    margin-right: 10px;
+  }
+
+  .coin-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--accent-color);
+    transition: transform 0.2s ease, color 0.3s ease;
+    padding: 5px;
+    border-radius: 8px;
+  }
+
+  .icon-btn:hover {
+    background-color: rgba(98, 0, 234, 0.1);
+    transform: scale(1.1);
   }
 
   .container {
@@ -50,17 +99,36 @@
     transition: background 0.3s;
   }
 
+  .glass {
+    background-color: var(--card-bg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    backdrop-filter: blur(10px);
+  }
+
   h2 {
     margin-bottom: 20px;
     color: var(--accent-color);
   }
 
-  p {
-    font-size: 1.1rem;
-    margin: 10px 0;
+  h2 .icon {
+    margin-right: 10px;
   }
 
-  #watch-ad {
+  .user-info {
+    margin-bottom: 20px;
+  }
+
+  .user-info div {
+    margin-bottom: 10px;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .modern-btn {
     background-color: var(--accent-color);
     color: white;
     border: none;
@@ -69,56 +137,26 @@
     font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s;
-    margin-top: 10px;
+    margin-bottom: 16px;
   }
 
-  #watch-ad:hover {
+  .modern-btn:hover {
     background-color: #7e33e4;
     transform: scale(1.05);
   }
 
-  #watch-ad:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
+  .modern-btn.alt {
+    background-color: #4CAF50;
   }
 
-  #rewarded-ad {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 15px 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-    margin-top: 16px;
-  }
-
-  #rewarded-ad:hover {
-    background-color: #7e33e4;
-    transform: scale(1.05);
+  .modern-btn.alt:hover {
+    background-color: #3e8e41;
   }
 
   #countdown {
     margin-top: 15px;
     font-weight: bold;
     color: var(--accent-color);
-  }
-
-  #dark-toggle {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--accent-color);
-    transition: transform 0.2s ease, color 0.3s ease;
-    padding: 5px;
-    border-radius: 8px;
-  }
-
-  #dark-toggle:hover {
-    background-color: rgba(98, 0, 234, 0.1);
-    transform: scale(1.1);
   }
 
   @media (max-width: 500px) {
@@ -129,33 +167,38 @@
     h2 {
       font-size: 1.3rem;
     }
-    #watch-ad {
-      width: 100%;
-    }
-    #rewarded-ad {
-      width: 100%;
-    }
   }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <span><strong>PlugainCoin:</strong> <span id="plugain-coin">0</span></span>
-    <button id="dark-toggle">🌙</button>
+  <div class="main-wrapper">
+    <div class="topbar">
+      <div class="logo-area">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Flag_of_Turkey.svg" alt="Plugain Logo" class="logo">
+        <span class="brand">Plugain</span>
+      </div>
+      <div class="coin-area">
+        <span class="coin-label"><strong>PlugainCoin:</strong></span>
+        <span id="plugain-coin" class="coin-value">0</span>
+        <button id="dark-toggle" class="icon-btn" title="Tema Değiştir">🌙</button>
+      </div>
+    </div>
+    <div class="container glass">
+      <h2><span class="icon">🎥</span> Reklam İzle & Puan Kazan</h2>
+      <div class="user-info">
+        <div><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></div>
+        <div><strong>Tıklama:</strong> <span id="click-count">Yükleniyor...</span></div>
+        <div><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></div>
+      </div>
+      <div class="btn-group">
+        <button id="watch-ad" class="modern-btn">Puan Kazan</button>
+        <button id="rewarded-ad" class="modern-btn alt">Reklam İzle</button>
+      </div>
+      <p id="countdown"></p>
+    </div>
   </div>
-  <div class="container">
-    <h2>🎥 Reklam İzle ve Puan Kazan</h2>
-    <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
-    <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
-    <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
-    <button id="watch-ad">Puan Kazan</button>
-    <button id="rewarded-ad" style="margin-top:16px;">Reklam İzle</button>
-    <p id="countdown"></p>
-  </div>
-
   <!-- Reklam SDK Scripti (show_9248782 için) -->
   <script src='//whephiwums.com/sdk.js' data-zone='9248782' data-sdk='show_9248782'></script>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import {
@@ -164,6 +207,7 @@
       get,
       set,
       update,
+      onValue
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
     const firebaseConfig = {
