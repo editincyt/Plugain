@@ -21,25 +21,18 @@ body {
   font-family: 'Inter', sans-serif;
   background: var(--bg);
   color: var(--text);
+  min-height: 100vh;
+  width: 100vw;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  justify-content: flex-start;
   transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 #bg-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100vw;
-  min-height: 100vh;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-  opacity: 0.8;
-  pointer-events: none;
+  display: none;
 }
 
 .container {
@@ -47,11 +40,11 @@ body {
   padding: 25px;
   border-radius: 20px;
   max-width: 400px;
-  width: 90%;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  text-align: center;
-  position: relative;
+  width: 90vw;
+  box-sizing: border-box;
+  margin: 40px auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  overflow-wrap: break-word;
 }
 
 .toggle-mode {
