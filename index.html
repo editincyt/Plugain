@@ -6,135 +6,138 @@
   <title>Plugain - Reklam İzle</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-  :root {
-    --bg-color: #f9f9f9;
-    --text-color: #222;
-    --accent-color: #6200ea;
-    --card-bg: #ffffff;
-  }
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #222;
+      --accent-color: #6200ea;
+      --card-bg: #ffffff;
+    }
 
-  body.dark-mode {
-    --bg-color: #121212;
-    --text-color: #eee;
-    --card-bg: #1e1e1e;
-  }
+    body.dark-mode {
+      --bg-color: #121212;
+      --text-color: #eee;
+      --card-bg: #1e1e1e;
+    }
 
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI", sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background 0.3s, color 0.3s;
-  }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-color);
+      background-image: url('https://your-image-url.com/background.jpg'); /* Arka plan görseli ekleyin */
+      background-size: cover;
+      background-position: center;
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+    }
 
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: var(--card-bg);
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: var(--card-bg);
+      border-bottom: 1px solid #ccc;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
 
-  .container {
-    max-width: 400px;
-    margin: 40px auto;
-    background-color: var(--card-bg);
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-    text-align: center;
-    transition: background 0.3s;
-  }
-
-  h2 {
-    margin-bottom: 20px;
-    color: var(--accent-color);
-  }
-
-  p {
-    font-size: 1.1rem;
-    margin: 10px 0;
-  }
-
-  #watch-ad {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 15px 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-    margin-top: 10px;
-  }
-
-  #watch-ad:hover {
-    background-color: #7e33e4;
-    transform: scale(1.05);
-  }
-
-  #watch-ad:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-
-  #rewarded-ad {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 15px 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-    margin-top: 16px;
-  }
-
-  #rewarded-ad:hover {
-    background-color: #7e33e4;
-    transform: scale(1.05);
-  }
-
-  #countdown {
-    margin-top: 15px;
-    font-weight: bold;
-    color: var(--accent-color);
-  }
-
-  #dark-toggle {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--accent-color);
-    transition: transform 0.2s ease, color 0.3s ease;
-    padding: 5px;
-    border-radius: 8px;
-  }
-
-  #dark-toggle:hover {
-    background-color: rgba(98, 0, 234, 0.1);
-    transform: scale(1.1);
-  }
-
-  @media (max-width: 500px) {
     .container {
-      margin: 20px;
-      padding: 20px;
+      max-width: 400px;
+      margin: 40px auto;
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+      text-align: center;
+      transition: background 0.3s;
     }
+
     h2 {
-      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: var(--accent-color);
     }
+
+    p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
     #watch-ad {
-      width: 100%;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 15px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      margin-top: 10px;
     }
+
+    #watch-ad:hover {
+      background-color: #7e33e4;
+      transform: scale(1.05);
+    }
+
+    #watch-ad:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
     #rewarded-ad {
-      width: 100%;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 15px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      margin-top: 16px;
     }
-  }
+
+    #rewarded-ad:hover {
+      background-color: #7e33e4;
+      transform: scale(1.05);
+    }
+
+    #countdown {
+      margin-top: 15px;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    #dark-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--accent-color);
+      transition: transform 0.2s ease, color 0.3s ease;
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    #dark-toggle:hover {
+      background-color: rgba(98, 0, 234, 0.1);
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      #watch-ad {
+        width: 100%;
+      }
+      #rewarded-ad {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -260,7 +263,6 @@
 
       rewardedBtn.addEventListener("click", async () => {
         show_9248782().then(async () => {
-          // Reklam izlendikten sonra puan işlemlerini yap
           const newClickCount = userData.clickCount + 1;
           const newPoints = userData.points + 10;
           const newCoin = Math.floor(newPoints / 100);
@@ -271,7 +273,6 @@
             plugainCoin: newCoin
           });
 
-          // userData'yı güncelle
           userData.clickCount = newClickCount;
           userData.points = newPoints;
           userData.plugainCoin = newCoin;
