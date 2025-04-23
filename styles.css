@@ -28,6 +28,20 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+#bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
 .container {
   background: var(--card);
   padding: 25px;
