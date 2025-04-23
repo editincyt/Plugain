@@ -10,114 +10,57 @@
     --bg-color: #f9f9f9;
     --text-color: #222;
     --accent-color: #6200ea;
-    --card-bg: rgba(255, 255, 255, 0.7); /* Şeffaf kart arka planı */
-    --button-hover: #7e33e4;
-    --button-bg: #6200ea;
+    --card-bg: #ffffff;
+  }
+
+  body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #eee;
+    --card-bg: #1e1e1e;
   }
 
   body {
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", sans-serif;
-    background: url('https://i.pinimg.com/originals/bc/e3/71/bce371a37eafe0c221bca702ff57f8aa.gif') no-repeat center center fixed; /* GIF arka planı */
-    background-size: cover;
+    background-color: var(--bg-color);
     color: var(--text-color);
     transition: background 0.3s, color 0.3s;
   }
 
-  body.dark-mode {
-    --bg-color: #121212;
-    --text-color: #eee;
-    --card-bg: rgba(30, 30, 30, 0.8);
-  }
-
-  .main-header {
+  .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.5); /* Yarı saydam arka plan */
-    color: white;
+    padding: 10px 20px;
+    background-color: var(--card-bg);
     border-bottom: 1px solid #ccc;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   }
 
-  .brand-area {
-    display: flex;
-    align-items: center;
-  }
-
-  .brand-icon {
-    font-size: 2rem;
-    margin-right: 10px;
-  }
-
-  .brand-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-
-  .header-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--accent-color);
-    transition: transform 0.2s ease, color 0.3s ease;
-    padding: 10px;
-    border-radius: 50%;
-  }
-
-  .header-btn:hover {
-    background-color: rgba(98, 0, 234, 0.1);
-    transform: scale(1.1);
-  }
-
-  .main-content {
+  .container {
     max-width: 400px;
     margin: 40px auto;
+    background-color: var(--card-bg);
     padding: 30px;
     border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
     text-align: center;
-    background-color: var(--card-bg);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(15px);
     transition: background 0.3s;
   }
 
-  .score-card {
-    background-color: var(--card-bg);
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(15px);
+  h2 {
+    margin-bottom: 20px;
+    color: var(--accent-color);
   }
 
-  .score-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+  p {
+    font-size: 1.1rem;
+    margin: 10px 0;
   }
 
-  .score-label {
-    font-weight: bold;
-  }
-
-  .score-value {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
-  .user-row {
-    margin-bottom: 10px;
-  }
-
-  .action-buttons {
-    margin-top: 20px;
-  }
-
-  .primary-btn {
-    background-color: var(--button-bg);
+  #watch-ad {
+    background-color: var(--accent-color);
     color: white;
     border: none;
     border-radius: 30px;
@@ -125,16 +68,21 @@
     font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s;
-    margin-bottom: 16px;
+    margin-top: 10px;
   }
 
-  .primary-btn:hover {
-    background-color: var(--button-hover);
+  #watch-ad:hover {
+    background-color: #7e33e4;
     transform: scale(1.05);
   }
 
-  .secondary-btn {
-    background-color: #4CAF50;
+  #watch-ad:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+
+  #rewarded-ad {
+    background-color: var(--accent-color);
     color: white;
     border: none;
     border-radius: 30px;
@@ -142,10 +90,11 @@
     font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s;
+    margin-top: 16px;
   }
 
-  .secondary-btn:hover {
-    background-color: #3e8e41;
+  #rewarded-ad:hover {
+    background-color: #7e33e4;
     transform: scale(1.05);
   }
 
@@ -155,45 +104,57 @@
     color: var(--accent-color);
   }
 
+  #dark-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--accent-color);
+    transition: transform 0.2s ease, color 0.3s ease;
+    padding: 5px;
+    border-radius: 8px;
+  }
+
+  #dark-toggle:hover {
+    background-color: rgba(98, 0, 234, 0.1);
+    transform: scale(1.1);
+  }
+
   @media (max-width: 500px) {
-    .main-content {
+    .container {
       margin: 20px;
       padding: 20px;
+    }
+    h2 {
+      font-size: 1.3rem;
+    }
+    #watch-ad {
+      width: 100%;
+    }
+    #rewarded-ad {
+      width: 100%;
     }
   }
   </style>
 </head>
 <body>
-  <header class="main-header">
-    <div class="brand-area">
-      <span class="brand-icon">🚀</span>
-      <span class="brand-title">Plugain MiniApp</span>
-    </div>
-    <button id="dark-toggle" class="header-btn" title="Tema Değiştir">🌗</button>
-  </header>
-  <main class="main-content">
-    <section class="score-card">
-      <div class="score-row">
-        <span class="score-label">PlugainCoin</span>
-        <span id="plugain-coin" class="score-value">0</span>
-      </div>
-      <div class="user-row">
-        <span>Kullanıcı:</span> <span id="user-name">Yükleniyor...</span>
-      </div>
-      <div class="user-row">
-        <span>Tıklama:</span> <span id="click-count">Yükleniyor...</span>
-      </div>
-      <div class="user-row">
-        <span>Puan:</span> <span id="user-points">Yükleniyor...</span>
-      </div>
-    </section>
-    <section class="action-buttons">
-      <button id="watch-ad" class="primary-btn">Puan Kazan</button>
-      <button id="rewarded-ad" class="secondary-btn">Reklam İzle</button>
-      <p id="countdown"></p>
-    </section>
-  </main>
+  <div class="topbar">
+    <span><strong>PlugainCoin:</strong> <span id="plugain-coin">0</span></span>
+    <button id="dark-toggle">🌙</button>
+  </div>
+  <div class="container">
+    <h2>🎥 Reklam İzle ve Puan Kazan</h2>
+    <p><strong>Kullanıcı Adı:</strong> <span id="user-name">Yükleniyor...</span></p>
+    <p><strong>Tıklama Sayısı:</strong> <span id="click-count">Yükleniyor...</span></p>
+    <p><strong>Puanlarınız:</strong> <span id="user-points">Yükleniyor...</span></p>
+    <button id="watch-ad">Puan Kazan</button>
+    <button id="rewarded-ad" style="margin-top:16px;">Reklam İzle</button>
+    <p id="countdown"></p>
+  </div>
+
+  <!-- Reklam SDK Scripti (show_9248782 için) -->
   <script src='//whephiwums.com/sdk.js' data-zone='9248782' data-sdk='show_9248782'></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import {
@@ -202,7 +163,6 @@
       get,
       set,
       update,
-      onValue
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
     const firebaseConfig = {
@@ -327,7 +287,7 @@
       const darkToggle = document.getElementById("dark-toggle");
 
       function updateDarkIcon() {
-        darkToggle.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌗";
+        darkToggle.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌙";
       }
 
       darkToggle.addEventListener("click", () => {
