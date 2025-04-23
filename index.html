@@ -103,6 +103,45 @@
     transform: scale(1.1);
   }
 
+  /* Modal Styles */
+  #modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #modal iframe {
+    width: 80%;
+    height: 80%;
+    border: none;
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
   @media (max-width: 500px) {
     .container {
       margin: 20px;
@@ -131,6 +170,14 @@
     <p id="countdown"></p>
     <!-- ✅ Yeni: Reklam İzle Butonu -->
     <button id="open-ad">Reklam İzle</button>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal">
+    <div class="modal-content">
+      <button class="close-modal" id="close-modal">X</button>
+      <iframe id="ad-iframe" src="" frameborder="0"></iframe>
+    </div>
   </div>
 
   <script type="module">
@@ -201,7 +248,7 @@
           const h = String(Math.floor(distance / (1000 * 60 * 60))).padStart(2, "0");
           const m = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0");
           const s = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, "0");
-          countdownEl.textContent = `Tekrar reklam izlemek için: ${h}:${m}:${s}`;
+          countdownEl.textContent = `Tekrar puan kazanmak için: ${h}:${m}:${s}`;
           setTimeout(update, 1000);
         }
         update();
@@ -232,12 +279,19 @@
         watchBtn.disabled = true;
         updateCountdown(new Date(Date.now() + 86400000));
 
-        tg.openLink("https://www.youtube.com");
+        tg.openLink("https://uvoonaix.top/4/9250644");
       });
 
       // ✅ Yeni Buton: Reklam İzle (adsgram.ai açar)
       document.getElementById("open-ad").addEventListener("click", () => {
-        tg.openLink("https://uvoonaix.top/4/9250644");
+        const modal = document.getElementById("modal");
+        const iframe = document.getElementById("ad-iframe");
+        iframe.src = "https://uvoonaix.top/4/9250644";  // Reklam linki
+        modal.style.display = "flex";
+      });
+
+      document.getElementById("close-modal").addEventListener("click", () => {
+        document.getElementById("modal").style.display = "none";
       });
 
       const darkToggle = document.getElementById("dark-toggle");
