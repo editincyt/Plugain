@@ -171,7 +171,6 @@
         });
       }
     };
-
     window.addEventListener("DOMContentLoaded", setVanta);
   </script>
 
@@ -204,7 +203,6 @@
 
       const uid = user.id;
       const name = user.first_name;
-
       const userRef = ref(db, `users/${uid}`);
       const snapshot = await get(userRef);
 
@@ -240,7 +238,6 @@
             watchBtn.disabled = false;
             return;
           }
-
           const h = String(Math.floor(distance / (1000 * 60 * 60))).padStart(2, "0");
           const m = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0");
           const s = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, "0");
@@ -261,12 +258,13 @@
         const newClickCount = userData.clickCount + 1;
         const newPoints = userData.points + 10;
         const newCoin = Math.floor(newPoints / 100);
+        const nowISO = new Date().toISOString();
 
         await update(userRef, {
           clickCount: newClickCount,
           points: newPoints,
           plugainCoin: newCoin,
-          lastClick: new Date().toISOString()
+          lastClick: nowISO
         });
 
         document.getElementById("click-count").textContent = newClickCount;
@@ -274,7 +272,6 @@
         document.getElementById("plugain-coin").textContent = newCoin;
         watchBtn.disabled = true;
         updateCountdown(new Date(Date.now() + 86400000));
-
         alert('Tebrikler! Puan kazandınız. 24 saat sonra tekrar deneyin.');
       });
 
@@ -283,16 +280,19 @@
           const newClickCount = userData.clickCount + 1;
           const newPoints = userData.points + 10;
           const newCoin = Math.floor(newPoints / 100);
+          const nowISO = new Date().toISOString();
 
           await update(userRef, {
             clickCount: newClickCount,
             points: newPoints,
-            plugainCoin: newCoin
+            plugainCoin: newCoin,
+            lastClick: nowISO
           });
 
           userData.clickCount = newClickCount;
           userData.points = newPoints;
           userData.plugainCoin = newCoin;
+          userData.lastClick = nowISO;
 
           document.getElementById("click-count").textContent = newClickCount;
           document.getElementById("user-points").textContent = newPoints;
@@ -303,16 +303,13 @@
       });
 
       const darkToggle = document.getElementById("dark-toggle");
-
       function updateDarkIcon() {
         darkToggle.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌙";
       }
-
       darkToggle.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
         updateDarkIcon();
       });
-
       updateDarkIcon();
     });
   </script>
